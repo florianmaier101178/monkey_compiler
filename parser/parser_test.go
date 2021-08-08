@@ -79,7 +79,6 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	return true
 }
 
-
 func TestReturnStatements(t *testing.T) {
 	input := `
 return 5;

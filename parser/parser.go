@@ -8,17 +8,17 @@ import (
 )
 
 type Parser struct {
-	lexer        *lexer.Lexer
+	lexer *lexer.Lexer
 
 	currentToken token.Token
 	peekToken    token.Token
 
-	errors       []string
+	errors []string
 }
 
 func New(l *lexer.Lexer) *Parser {
 	p := Parser{
-		lexer: l,
+		lexer:  l,
 		errors: []string{},
 	}
 
@@ -113,7 +113,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 	return &program
 }
 
-func (p *Parser) Errors() [] string {
+func (p *Parser) Errors() []string {
 	return p.errors
 }
 
