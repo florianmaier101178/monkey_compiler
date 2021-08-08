@@ -1,7 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"monkey/repl"
+	"os"
+	"os/user"
+)
 
 func main() {
-	fmt.Println("monkey")
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Hello '%s'! Welcome to the Monkey REPL!\n", user.Username)
+	fmt.Printf("Please enter some commands ...\n")
+	repl.Start(os.Stdin, os.Stdout)
 }
