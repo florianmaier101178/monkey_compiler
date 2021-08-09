@@ -1,19 +1,5 @@
 package token
 
-type TokenType string
-
-type Token struct {
-	Type    TokenType
-	Literal string
-}
-
-func New(tokenType TokenType, literal string) Token {
-	return Token{
-		Type:    tokenType,
-		Literal: literal,
-	}
-}
-
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
@@ -71,6 +57,20 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+}
+
+type TokenType string
+
+type Token struct {
+	Type    TokenType
+	Literal string
+}
+
+func New(tokenType TokenType, literal string) Token {
+	return Token{
+		Type:    tokenType,
+		Literal: literal,
+	}
 }
 
 func LookupIdentifier(ident string) TokenType {

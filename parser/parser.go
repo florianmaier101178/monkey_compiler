@@ -7,6 +7,18 @@ import (
 	"monkey/token"
 )
 
+// needed for operator precedence
+const (
+	_ int = iota
+	LOWEST
+	EQUALS
+	LESSGREATER
+	SUM
+	PRODUCT
+	PREFIX
+	CALL
+)
+
 type (
 	prefixParseFn func() ast.Expression
 	infixParseFn  func(ast.Expression) ast.Expression
@@ -40,6 +52,10 @@ func New(l *lexer.Lexer) *Parser {
 	return &p
 }
 
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
 func (p *Parser) registerPrefixFn(tokenType token.TokenType, fn prefixParseFn) {
 	p.prefixParseFns[tokenType] = fn
 }
@@ -53,6 +69,21 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.lexer.NextToken()
 }
 
+func (p *Parser) ParseProgram() *ast.Program {
+	program := ast.Program{}
+	program.Statements = []ast.Statement{}
+
+	for p.currentToken.Type != token.EOF {
+		s := p.parseStatement()
+		if s != nil {
+			program.Statements = append(program.Statements, s)
+		}
+		p.nextToken()
+	}
+
+	return &program
+}
+
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
 	case token.LET:
@@ -62,24 +93,6 @@ func (p *Parser) parseStatement() ast.Statement {
 	default:
 		return p.parseExpressionStatement()
 	}
-}
-
-func (p *Parser) peekTokenIs(t token.TokenType) bool {
-	return p.peekToken.Type == t
-}
-
-func (p *Parser) expectPeek(t token.TokenType) bool {
-	if p.peekTokenIs(t) {
-		p.nextToken()
-		return true
-	} else {
-		p.peekError(t)
-		return false
-	}
-}
-
-func (p *Parser) currentTokenIs(t token.TokenType) bool {
-	return p.currentToken.Type == t
 }
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {
@@ -117,42 +130,6 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	return s
 }
 
-func (p *Parser) ParseProgram() *ast.Program {
-	program := ast.Program{}
-	program.Statements = []ast.Statement{}
-
-	for p.currentToken.Type != token.EOF {
-		s := p.parseStatement()
-		if s != nil {
-			program.Statements = append(program.Statements, s)
-		}
-		p.nextToken()
-	}
-
-	return &program
-}
-
-func (p *Parser) Errors() []string {
-	return p.errors
-}
-
-func (p *Parser) peekError(t token.TokenType) {
-	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
-	p.errors = append(p.errors, msg)
-}
-
-// needed for operator precedence
-const (
-	_ int = iota
-	LOWEST
-	EQUALS
-	LESSGREATER
-	SUM
-	PRODUCT
-	PREFIX
-	CALL
-)
-
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	s := &ast.ExpressionStatement{Token: p.currentToken}
 
@@ -173,6 +150,29 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 
 	leftExpression := prefix()
 	return leftExpression
+}
+
+func (p *Parser) peekTokenIs(t token.TokenType) bool {
+	return p.peekToken.Type == t
+}
+
+func (p *Parser) expectPeek(t token.TokenType) bool {
+	if p.peekTokenIs(t) {
+		p.nextToken()
+		return true
+	} else {
+		p.peekError(t)
+		return false
+	}
+}
+
+func (p *Parser) peekError(t token.TokenType) {
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
+}
+
+func (p *Parser) currentTokenIs(t token.TokenType) bool {
+	return p.currentToken.Type == t
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {

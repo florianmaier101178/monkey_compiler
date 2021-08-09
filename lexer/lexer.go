@@ -15,16 +15,6 @@ func New(input string) *Lexer {
 	return &l
 }
 
-func (l *Lexer) readCharacter() {
-	if l.readPosition >= len(l.input) {
-		l.character = 0
-	} else {
-		l.character = l.input[l.readPosition]
-	}
-	l.position = l.readPosition
-	l.readPosition += 1
-}
-
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -92,6 +82,16 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.readCharacter()
 	return tok
+}
+
+func (l *Lexer) readCharacter() {
+	if l.readPosition >= len(l.input) {
+		l.character = 0
+	} else {
+		l.character = l.input[l.readPosition]
+	}
+	l.position = l.readPosition
+	l.readPosition += 1
 }
 
 func (l *Lexer) skipWhitespace() {
