@@ -36,51 +36,43 @@ func (l *Lexer) NextToken() token.Token {
 			ch := l.character
 			l.readCharacter()
 			literal := string(ch) + string(l.character)
-			//TODO flo: refactor to use newToken method, or overload the method if needed for byte
-			tok = token.Token{
-				Type:    token.EQ,
-				Literal: literal,
-			}
+			tok = token.New(token.EQ, literal)
 		} else {
-			tok = newToken(token.ASSIGN, l.character)
+			tok = token.New(token.ASSIGN, string(l.character))
 		}
 	case '!':
 		if l.peekCharacter() == '=' {
 			ch := l.character
 			l.readCharacter()
 			literal := string(ch) + string(l.character)
-			//TODO flo: refactor to use newToken method, or overload the method if needed for byte
-			tok = token.Token{
-				Type:    token.NOT_EQ,
-				Literal: literal,
-			}
+			tok = token.New(token.NOT_EQ, literal)
 		} else {
-			tok = newToken(token.BANG, l.character)
+			tok = token.New(token.BANG, string(l.character))
 		}
 	case '+':
-		tok = newToken(token.PLUS, l.character)
+		tok = token.New(token.PLUS, string(l.character))
 	case '-':
-		tok = newToken(token.MINUS, l.character)
+		tok = token.New(token.MINUS, string(l.character))
 	case '/':
-		tok = newToken(token.SLASH, l.character)
+		tok = token.New(token.SLASH, string(l.character))
 	case '*':
-		tok = newToken(token.ASTERISK, l.character)
+		tok = token.New(token.ASTERISK, string(l.character))
 	case '<':
-		tok = newToken(token.LT, l.character)
+		tok = token.New(token.LT, string(l.character))
 	case '>':
-		tok = newToken(token.GT, l.character)
+		tok = token.New(token.GT, string(l.character))
 	case '(':
-		tok = newToken(token.LPAREN, l.character)
+		tok = token.New(token.LPAREN, string(l.character))
 	case ')':
-		tok = newToken(token.RPAREN, l.character)
+		tok = token.New(token.RPAREN, string(l.character))
 	case '{':
-		tok = newToken(token.LBRACE, l.character)
+		tok = token.New(token.LBRACE, string(l.character))
 	case '}':
-		tok = newToken(token.RBRACE, l.character)
+		tok = token.New(token.RBRACE, string(l.character))
 	case ',':
-		tok = newToken(token.COMMA, l.character)
+		tok = token.New(token.COMMA, string(l.character))
 	case ';':
-		tok = newToken(token.SEMICOLON, l.character)
+		tok = token.New(token.SEMICOLON, string(l.character))
 	case 0:
 		tok.Type = token.EOF
 		tok.Literal = ""
@@ -94,7 +86,7 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = l.readNumber()
 			return tok
 		} else {
-			tok = newToken(token.ILLEGAL, l.character)
+			tok = token.New(token.ILLEGAL, string(l.character))
 		}
 	}
 
@@ -105,14 +97,6 @@ func (l *Lexer) NextToken() token.Token {
 func (l *Lexer) skipWhitespace() {
 	for l.character == ' ' || l.character == '\t' || l.character == '\n' || l.character == '\r' {
 		l.readCharacter()
-	}
-}
-
-//TODO flo: think about correct place for this function, wouldn't it make sense to place it in the 'token' package
-func newToken(tokenType token.TokenType, ch byte) token.Token {
-	return token.Token{
-		Type:    tokenType,
-		Literal: string(ch),
 	}
 }
 
