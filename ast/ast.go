@@ -9,11 +9,6 @@ type Node interface {
 	String() string
 }
 
-type Expression interface {
-	Node
-	expressionNode()
-}
-
 type Program struct {
 	Statements []Statement
 }
