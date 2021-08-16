@@ -270,9 +270,9 @@ func (p *Parser) currentPrecedence() int {
 
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := ast.InfixExpression{
-		Token: p.currentToken,
+		Token:    p.currentToken,
 		Operator: p.currentToken.Literal,
-		Left: left,
+		Left:     left,
 	}
 
 	precedence := p.currentPrecedence()
