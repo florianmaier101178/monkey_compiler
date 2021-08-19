@@ -8,9 +8,9 @@ import (
 )
 
 func testBooleanLiteral(t *testing.T, expression ast.Expression, value bool) bool {
-	boo, ok := expression.(*ast.Boolean)
+	boo, ok := expression.(*ast.BooleanLiteral)
 	if !ok {
-		t.Fatalf("expression not *ast.Boolean. got=%T", expression)
+		t.Fatalf("expression not *ast.BooleanLiteral. got=%T", expression)
 		return false
 	}
 
@@ -207,7 +207,7 @@ return 993322;
 	}
 }
 
-func TestBooleanExpression(t *testing.T) {
+func TestBooleanLiteralExpression(t *testing.T) {
 	input := "true;"
 
 	l := lexer.New(input)
