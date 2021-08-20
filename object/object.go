@@ -39,7 +39,7 @@ func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 
-type Null struct {}
+type Null struct{}
 
 func (n *Null) Type() ObjectType {
 	return NULL_OBJ
