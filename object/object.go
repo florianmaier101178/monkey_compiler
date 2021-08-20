@@ -45,6 +45,6 @@ func (n *Null) Type() ObjectType {
 	return NULL_OBJ
 }
 
-func (n *Boolean) Null() string {
+func (n *Null) Inspect() string {
 	return "null"
 }
