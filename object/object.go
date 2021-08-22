@@ -7,6 +7,7 @@ const (
 	BooleanObj     = "BOOLEAN"
 	NullObj        = "NULL"
 	ReturnValueObj = "RETURN_VALUE"
+	StringObj      = "STRING"
 )
 
 type ObjectType string
@@ -60,4 +61,16 @@ func (rv *ReturnValue) Type() ObjectType {
 
 func (rv *ReturnValue) Inspect() string {
 	return rv.Value.Inspect()
+}
+
+type String struct {
+	Value string
+}
+
+func (s *String) Type() ObjectType {
+	return StringObj
+}
+
+func (s *String) Inspect() string {
+	return s.Value
 }

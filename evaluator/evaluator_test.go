@@ -314,3 +314,17 @@ addTwo(2);
 `
 	testIntegerObject(t, testEval(input), 5)
 }
+
+func TestStringLiteral(t *testing.T) {
+	input := `"Hello World!"`
+
+	evaluated := testEval(input)
+	s, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if s.Value != "Hello World!" {
+		t.Errorf("string has wrong value. got=%q", s.Value)
+	}
+}
