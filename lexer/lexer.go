@@ -63,6 +63,9 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.New(token.COMMA, string(l.character))
 	case ';':
 		tok = token.New(token.SEMICOLON, string(l.character))
+	case '"':
+		tok.Type = token.STRING
+		tok.Literal = l.readString()
 	case 0:
 		tok.Type = token.EOF
 		tok.Literal = ""
@@ -129,5 +132,17 @@ func (l *Lexer) readNumber() string {
 	for isDigit(l.character) {
 		l.readCharacter()
 	}
+	return l.input[position:l.position]
+}
+
+func (l *Lexer) readString() string {
+	position := l.position + 1
+	for {
+		l.readCharacter()
+		if l.character == '"' || l.character == 0 {
+			break
+		}
+	}
+
 	return l.input[position:l.position]
 }
