@@ -454,3 +454,68 @@ func TestArrayIndexExpressions(t *testing.T) {
 		}
 	}
 }
+
+func TestMapFunctionBasedOnArrayBuiltins(t *testing.T) {
+	input := `
+let map = fn(arr, f) {
+  let iter = fn(arr, accumulated) {
+    if (len(arr) == 0) {
+      accumulated
+    } else {
+      iter(rest(arr), push(accumulated, f(first(arr))));
+    }
+  };
+
+  iter(arr, []);
+};
+
+let a = [1, 2, 3, 4];
+let double = fn(x) { x * 2 };
+map(a, double);
+`
+
+	evaluated := testEval(input)
+	result, ok := evaluated.(*object.Array)
+	if !ok {
+		t.Fatalf("object is not Array. got =%T (%+v)", evaluated, evaluated)
+	}
+
+	if len(result.Elements) != 4 {
+		t.Fatalf("array has wrong num of elements. got=%d", len(result.Elements))
+	}
+
+	testIntegerObject(t, result.Elements[0], 2)
+	testIntegerObject(t, result.Elements[1], 4)
+	testIntegerObject(t, result.Elements[2], 6)
+	testIntegerObject(t, result.Elements[3], 8)
+}
+
+func TestReduceFunctionBasedOnArrayBuiltins(t *testing.T) {
+	input := `
+let reduce = fn(arr, initial, f) {
+  let iter = fn(arr, result) {
+    if (len(arr) == 0) {
+      result
+    } else {
+      iter(rest(arr), f(result, first(arr)));
+    }
+  };
+
+  iter(arr, initial);
+};
+
+let sum = fn(arr) {
+  reduce(arr, 0, fn(initial, el) { initial + el });
+};
+
+sum([1, 2, 3, 4, 5]);
+`
+
+	evaluated := testEval(input)
+	result, ok := evaluated.(*object.Integer)
+	if !ok {
+		t.Fatalf("object is not Integer. got =%T (%+v)", evaluated, evaluated)
+	}
+
+	testIntegerObject(t, result, 15)
+}
