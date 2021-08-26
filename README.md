@@ -1,2 +1,2 @@
-# monkey interpreter
-personal playground for https://interpreterbook.com/
+# monkey compiler
+personal playground for https://compilerbook.com/
