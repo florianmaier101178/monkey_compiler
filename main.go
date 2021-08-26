@@ -15,5 +15,5 @@ func main() {
 
 	fmt.Printf("Hello '%s'! Welcome to the Monkey REPL!\n", user.Username)
 	fmt.Printf("Please enter some commands ...\n")
-	repl.Start(os.Stdin, os.Stdout)
+	repl.StartCompilerRepl(os.Stdin, os.Stdout)
 }
