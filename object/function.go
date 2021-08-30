@@ -2,12 +2,15 @@ package object
 
 import (
 	"bytes"
+	"fmt"
 	"monkey/ast"
+	"monkey/code"
 	"strings"
 )
 
 const (
-	FunctionObj = "FUNCTION"
+	FunctionObj         = "FUNCTION"
+	CompiledFunctionObj = "COMPILED_FUNCTION"
 )
 
 type Function struct {
@@ -36,4 +39,16 @@ func (f *Function) Inspect() string {
 	out.WriteString("\n}")
 
 	return out.String()
+}
+
+type CompiledFunction struct {
+	Instructions code.Instructions
+}
+
+func (cf *CompiledFunction) Type() ObjectType {
+	return CompiledFunctionObj
+}
+
+func (cf *CompiledFunction) Inspect() string {
+	return fmt.Sprintf("CompiledFunction[%p]", cf)
 }
