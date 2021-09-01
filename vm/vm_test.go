@@ -433,7 +433,7 @@ noReturnTwo();
 }
 
 func TestFirstClassFunctions(t *testing.T) {
-	tests := []vmTestCase {
+	tests := []vmTestCase{
 		{
 			input: `
 let returnOne = fn() { 1; };
